@@ -5,6 +5,8 @@ import { bind, unbind } from 'mousetrap';
 
 import { SoundboardSound } from './Types';
 
+import 'rc-slider/assets/index.css';
+
 interface TileProps {
     keyMapping: string;
     sound: SoundboardSound | null;
@@ -88,6 +90,7 @@ export default class Tile extends React.Component<TileProps, TileState> {
             <div className="h-25 flex items-start pa2" style={{ position: 'relative' }}>
                 <div
                     className="h-100 w-100 flex br3 ba b--black-20 bg-white"
+                    style={{ cursor: 'pointer' }}
                     onClick={this.playSound}
                 >
                     <div

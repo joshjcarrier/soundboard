@@ -1,8 +1,9 @@
 declare module 'macos-tabs' {
   import * as React from "react";
-  // export function TabBody(): void
+
   interface MacOSTabsProps {
     tabs: React.ReactNode[]
+    defaultContent: React.ReactNode
   }
   export default class MacOSTabs extends React.Component<MacOSTabsProps> {}
 
