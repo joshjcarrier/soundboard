@@ -116,7 +116,7 @@ export default class Tile extends React.Component<TileProps, TileState> {
                     onClick={this.playSound}
                 >
                     <div
-                        className="w-100 pa2 f4 b sans-serif"
+                        className="w-100 pa2 f5 b sans-serif"
                         style={{
                             wordBreak: 'break-word',
                             overflow: 'hidden',
@@ -129,11 +129,22 @@ export default class Tile extends React.Component<TileProps, TileState> {
                         {sound ? sound.name : ''}
                     </div>
                     <div className="pa2" style={{ zIndex: 10 }}>
-                        <button className="f3">{keyMapping.toUpperCase()}</button>
+                        <button className="f3 shadow-5 sans-serif">
+                            {keyMapping.toUpperCase()}
+                        </button>
                     </div>
                     <div className="h-100 ph1 pv3" style={{ zIndex: 10 }}>
-                        <div className="h-100">
-                            <Slider vertical={true} defaultValue={100} />
+                        <div className="h-100" onClick={e => e.stopPropagation()}>
+                            <Slider
+                                vertical={true}
+                                defaultValue={100}
+                                value={sound ? sound.playbackVolume * 100 : 100}
+                                trackStyle={{
+                                    backgroundColor: 'lightgray',
+                                    border: 'solid darkgray 1px'
+                                }}
+                                handleStyle={{ backgroundColor: 'lightgray', borderColor: 'gray' }}
+                            />
                         </div>
                     </div>
                 </div>
