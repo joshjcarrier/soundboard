@@ -55,6 +55,10 @@ export default class Tile extends React.Component<TileProps, TileState> {
             clearInterval(this.timerID);
         }
 
+        if (this.sfx) {
+            this.sfx.stop();
+        }
+
         unbind(this.props.keyMapping);
     }
 

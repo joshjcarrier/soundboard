@@ -1,15 +1,26 @@
 # Soundboard 🔊
 
-*Play your favorite sound bites from a familiar `sbzip` format.*
+_Play your favorite sound bites from a familiar `sbzip` format._
 
 ## Features 📣
 
-- [x] Play sound bites from an uncompressed `.sbzip` folder
-- [x] Hotkeys for each sound bite
-- [ ] Load directly from `.sbzip` archive
-- [ ] Load more than one soundboard archive at a time
-- [ ] Remember last opened archives
-- [ ] Edit & save sound bite mapping
+-   [x] Play sound bites from an uncompressed `.sbzip` folder
+-   [x] Hotkey for each sound bite
+-   [x] Volume for each sound bite
+-   [x] Color for each sound bite
+-   [x] Load more than one soundboard archive at a time
+-   [ ] Load directly from `.sbzip` archive
+-   [ ] Remember last opened archives
+-   [ ] Temporarily lock changes to board
+-   [ ] Edit & save sound bite config back to sbzip
+-   [ ] Create new soundboard
+
+### Future Ideas
+
+-   [ ] Extract sound from Internet source
+-   [ ] Key heatmap/statistics
+-   [ ] Trigger by server API - individual
+-   [ ] Trigger by server API - voting
 
 ## Install 🔔
 
@@ -36,6 +47,15 @@ Resulting directory structure.
 
 Then launch the app.
 
+If multiple soundboards should be loaded, make a directory structure like this:
+
+```
++ ~/Downloads/
++-+ 0.soundboard/
++-+ 1.soundboard/
++-+ 2.soundboard/
+```
+
 ## Contribute 🙉
 
 ### Compiling
@@ -60,6 +80,7 @@ npm run start-dev
 ```
 
 ### Packaging
+
 We use [Electron builder](https://www.electron.build/) to build and package the application. By default you can run the following to package for your current platform:
 
 ```bash

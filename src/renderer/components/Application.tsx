@@ -9,7 +9,7 @@ import Board from './Board';
 require('./Application.scss');
 
 import { Parser, processors } from 'xml2js';
-import { readFile } from 'fs';
+import { readdir, readFile } from 'fs';
 
 const parser = new Parser({
     explicitRoot: false,
@@ -26,6 +26,7 @@ interface SoundboardDirectory {
 
 interface ApplicationState {
     soundboards: SoundboardDirectory[];
+    activeTabIndex: number;
 }
 class Application extends React.Component<{}, ApplicationState> {
     appDir = remote.app.getPath('downloads');
@@ -33,31 +34,50 @@ class Application extends React.Component<{}, ApplicationState> {
     constructor(props: {}) {
         super(props);
         this.state = {
-            soundboards: []
+            soundboards: [],
+            activeTabIndex: 0
         };
     }
 
     componentDidMount() {
-        const soundboardDir = join(this.appDir, '0.soundboard');
-        readFile(join(soundboardDir, 'Contents.xml'), (e, xmlString) => {
+        readdir(this.appDir, (e, files) => {
             if (e != null) {
+                console.error(e);
                 return;
             }
-            parser.parseString(xmlString, (err: any, data: Soundboard) => {
-                if (err != null) {
-                    return;
+
+            files.forEach(f => {
+                if (f.match(/\d+\.soundboard/)) {
+                    const soundboardDir = join(this.appDir, f);
+                    readFile(join(soundboardDir, 'Contents.xml'), (e, xmlString) => {
+                        if (e != null) {
+                            return;
+                        }
+                        parser.parseString(xmlString, (err: any, data: Soundboard) => {
+                            if (err != null) {
+                                return;
+                            }
+                            console.log(data);
+                            this.setState({
+                                ...this.state,
+                                soundboards: [
+                                    ...this.state.soundboards,
+                                    { path: soundboardDir, soundboard: data }
+                                ]
+                            });
+                        });
+                    });
                 }
-                console.log(data);
-                this.setState({
-                    ...this.state,
-                    soundboards: [
-                        ...this.state.soundboards,
-                        { path: soundboardDir, soundboard: data }
-                    ]
-                });
             });
         });
     }
+
+    setActiveTab = (index: number) => {
+        this.setState({
+            ...this.state,
+            activeTabIndex: index
+        });
+    };
 
     public render() {
         return (
@@ -65,6 +85,9 @@ class Application extends React.Component<{}, ApplicationState> {
                 <div style={{ height: '96%' }}>
                     <MacOSTabs
                         tabs={this.renderTabs()}
+                        addTabPosition="none" // TODO
+                        activeTabIndex={this.state.activeTabIndex}
+                        onSetActiveTab={this.setActiveTab}
                         defaultContent={`Loading from ${this.appDir}...`}
                     />
                 </div>
@@ -78,7 +101,9 @@ class Application extends React.Component<{}, ApplicationState> {
     private renderTabs() {
         return this.state.soundboards.map((dir, i) => (
             <TabBody key={`application--tab-body-${i}`} label={dir.soundboard.name} tabId={i}>
-                <Board soundboardDir={dir.path} sounds={dir.soundboard.sounds.sound} />
+                {i === this.state.activeTabIndex ? (
+                    <Board soundboardDir={dir.path} sounds={dir.soundboard.sounds.sound} />
+                ) : null}
             </TabBody>
         ));
     }
