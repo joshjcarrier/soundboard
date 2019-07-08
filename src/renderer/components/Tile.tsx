@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as ColorString from 'color-string';
 import { Howl } from 'howler';
 import Slider from 'rc-slider';
 import { bind, unbind } from 'mousetrap';
@@ -85,20 +86,38 @@ export default class Tile extends React.Component<TileProps, TileState> {
 
     public render() {
         const { keyMapping, sound } = this.props;
+        let backgroundColor = 'white';
+        if (sound) {
+            if (sound.backgroundColor) {
+                backgroundColor = sound.backgroundColor;
+            } else {
+                backgroundColor = 'dimgray';
+            }
+        }
+        const color = ColorString.get.rgb(backgroundColor);
+        let gradientBackgroundColor = backgroundColor;
+        if (color) {
+            backgroundColor = ColorString.to.rgb(color.slice(0, 3), 0.5);
+            gradientBackgroundColor = ColorString.to.rgb(color.slice(0, 3), 0.3);
+        }
 
         return (
             <div className="h-25 flex items-start pa2" style={{ position: 'relative' }}>
                 <div
-                    className="h-100 w-100 flex br3 ba b--black-20 bg-white"
-                    style={{ cursor: 'pointer' }}
+                    className="h-100 w-100 flex br3 ba b--black-20"
+                    style={{
+                        backgroundImage: `linear-gradient(${gradientBackgroundColor}, ${backgroundColor} 40%, ${backgroundColor} 90%,  ${gradientBackgroundColor})`,
+                        cursor: 'pointer'
+                    }}
                     onClick={this.playSound}
                 >
                     <div
-                        className="w-100 pa2 f4 b"
+                        className="w-100 pa2 f4 b sans-serif"
                         style={{
                             wordBreak: 'break-word',
                             overflow: 'hidden',
                             textOverflow: 'ellipses',
+                            textShadow: '1px 1px white',
                             zIndex: 10
                         }}
                         title={sound ? sound.name : ''}
